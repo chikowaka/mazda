@@ -7,7 +7,7 @@ module.exports = merge(base, {
   mode: 'development',
   watch: true,
   entry: {
-    'content-script': './src/contents.tsx',
+    contents: './src/contents.tsx',
     background: './src/background.ts',
   },
   resolve: {
@@ -19,7 +19,7 @@ module.exports = merge(base, {
       port: 3001,
       reloadPage: true,
       entries: {
-        contentScript: "content-script",
+        contentScript: "contents",
         background: "background",
       },
     }),
