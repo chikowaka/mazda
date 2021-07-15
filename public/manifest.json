@@ -11,7 +11,8 @@
         "scripts": ["background.js"]
     },
     "permissions": [
-      "tabs"
+      "tabs",
+      "alarms"
     ],
     "content_scripts": [
         {
