@@ -10,24 +10,40 @@ import './popup.css';
 const App = () => {
     return(
         <div>
-            <div className='title'><p><strong>ブレストタイム！</strong></p></div>
-            <p>このページの◯◯がヒントかも？？</p>
-            <p>あなたのテーマは「◯◯」です</p>
-            <input type="button" id="btn" value="閉じる" /><br></br>
+            <div className='title'> <h2><strong>いつでもブレストのテーマ入力</strong></h2></div>
+            <p>あなたのブレストテーマを入力してください</p>
+            <input id="input" type="text" value="テーマ"></input>
+            <button id="submit">テーマを決定</button>
         </div>
     )
 };
 
 
-window.onload = function ()
-{
-  //Run when opened
-}
+// function sendToContents(){
+//   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+//       chrome.tabs.sendMessage(tabs[0].id, 
+//           JSON.stringify({ contents: "test value from popup" }),
+//           function (response) {
+//           });
+//   });    
+// }
+// document.getElementById('send').addEventListener('click', sendToContents);
+
+// window.onload = function ()
+// {
+//   //Run when opened
+// }
 //Aboutボタン（常に有効）
 $(function(){
-　$("#btn").click(function(){
+　$("#btn").on('click',function(){
   //Executed when the button is pressed
-  console.log('Pushed!');//For debugging
+  const forms = document.getElementsByClassName('usersTheme');
+  const content = forms.item(0).nodeValue;
+  console.log('Pushed!, forms:', content);//For debugging
+  var send_data = {type: 'users_theme', data:['key','val']};
+  chrome.runtime.sendMessage(send_data)
+  // localStorage.setItem("testKey", "testVal");
+  // console.log(localStorage.getItem("testKey"));
 　});
 });
 

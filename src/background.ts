@@ -1,14 +1,14 @@
 /* When the browser-action button is clicked... */
-// chrome.browserAction.onClicked.addListener(function(tab) {
-//     console.log(tab);
-//     chrome.tabs.sendMessage(tab.id, {
-//         command: "change_title",
-//         title: "hoge"
-//       },
-//       function(msg) {
-//         console.log("result message:", msg);
-//       });
-//   });
+chrome.browserAction.onClicked.addListener(function(tab) {
+    console.log(tab);
+    chrome.tabs.sendMessage(tab.id, {
+        command: "change_title",
+        title: "hoge"
+      },
+      function(msg) {
+        console.log("result message:", msg);
+      });
+  });
 console.log('test');
 chrome.alarms.create('NAME_OF_ALARM', { delayInMinutes: 1, periodInMinutes: 1 });
 chrome.alarms.onAlarm.addListener(alarm => {
@@ -26,4 +26,13 @@ chrome.alarms.onAlarm.addListener(alarm => {
         });
     });
   }
+});
+
+chrome.runtime.onMessage.addListener((request, sender) => {
+	if(request.type == 'users_theme'){//ここで判別
+		console.log(request.data[0]);
+    localStorage.setItem(request.data[0], request.data[1]);
+    console.log(localStorage.getItem("testKey"));
+		return true;
+	}
 });
