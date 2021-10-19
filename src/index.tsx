@@ -21,6 +21,8 @@ const App = () => {
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
+
+//テーマを更新した時の機能
 const updateThemaButton = document.getElementById('updateTheme');
 updateThemaButton.addEventListener('click', function(){
     const themeText = document.getElementById('userTheme') as HTMLInputElement;
@@ -29,6 +31,7 @@ updateThemaButton.addEventListener('click', function(){
     chrome.runtime.sendMessage(sendData);
 });
 
+// デバッグ用の上書き機能
 const debugButton = document.getElementById('debug');
 debugButton.addEventListener('click', function(){
     const themeText = document.getElementById('userTheme') as HTMLInputElement;
@@ -37,6 +40,7 @@ debugButton.addEventListener('click', function(){
     console.log('debug done')
 });
 
+// アイデア入力時の機能
 const inputIdeaButton = document.getElementById('inputIdea');
 inputIdeaButton.addEventListener('click', function(){
     const ideaText = document.getElementById('newIdea') as HTMLInputElement;

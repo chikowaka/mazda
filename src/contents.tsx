@@ -1,11 +1,12 @@
 // ページへのjavascriptはここ
 /* Listen for messages */
+
+import './contents.css';
+
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
   // const updated_tweet = document.getElementsByClassName('css-901oao css-16my406 r-1tl8opc r-bcqeeo r-qvutc0 flag_update');//Tweetのアカウント名〜いいねまで削除
 
   // タイムラインの読み込み
-
-
   if (msg['command'] == 'brestResume'){
     // console.log('ideaLogs:', msg['ideaLogs'][0]['Idea']);
     let theme = msg['theme']
@@ -18,19 +19,37 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     if(msg['latestIdea']){
       new_tweet_text.innerHTML = '\
       <div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu">\
-        <b>いつでもブレスト</b>\
-        ブレストタイム！テーマは「' + theme +'」です。<br>' 
-        + 'これまでに考えたアイデア:「'+ msg['latestIdea'] +'」<br>'
+        <b>ブレストタイム！</b>\
+        テーマは「' + theme +'」です。<br>' 
+        // + 'これまでに考えたアイデア:「'+ msg['latestIdea'] +'」<br>'
         + 'これらと次のキーワードを組み合わてアイデアを１つ入力してください！<br>'
-        + 'キーワード:「'+ msg['keyword'] +'」'
+        + 'キーワード:「'+ msg['keyword'] +'」<br>'
+        + '<div class="flex-form">'
+          + '<div class="cp_iptxt flex-item">'
+            + '<input class="ef" type="text" placeholder="" id="newIdea">'
+            + '<label>アイデア</label>'
+            + '<span class="focus_line"></span>'
+          + '</div>'
+          + '<div class="flex-item form-idea">'
+            + '<input class="reset button-shadow" type="button" id="inputIdea" value="入力">'
+          + '</div>'
+        +'</div>'
         + profileTweet_action_html + '</div>';
     }else{
       new_tweet_text.innerHTML = '\
       <div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu">\
-        <b>いつでもブレスト</b>\
-        ブレストタイム！テーマは「' + theme +'」です。<br>' 
-        + 'このテーマと次のキーワードを組み合わてアイデアを１つ考えて入力してください！<br>'
-        + 'キーワード:「'+ msg['keyword'] +'」'
+        <b>ブレストタイム！</b>\
+        テーマは「' + theme +'」です。<br>' 
+        + '<div class="flex-form">'
+          + '<div class="cp_iptxt flex-item">'
+            + '<input class="ef" type="text" placeholder="" id="newIdea">'
+            + '<label>アイデア</label>'
+            + '<span class="focus_line"></span>'
+          + '</div>'
+          + '<div class="flex-item form-idea">'
+            + '<input class="reset button-shadow" type="button" id="inputIdea" value="入力" disabled>'
+          + '</div>'
+        +'</div>'
         + profileTweet_action_html + '</div>';
     }
     
@@ -45,6 +64,28 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     console.log('上書きトプ画', target_profile_img.item(4));
     target_profile_img.item(4).parentNode.replaceChild(new_profile_img, target_profile_img.item(4));
     
+    const inputIdeaButton = document.getElementById('inputIdea') as HTMLInputElement;
+    inputIdeaButton.addEventListener('click', function(){
+      const ideaText = document.getElementById('newIdea') as HTMLInputElement;
+      console.log('Pushed!　新アイデア:', ideaText.value);
+      const sendData = {type: 'newIdea', idea:ideaText.value};
+      chrome.runtime.sendMessage(sendData);
+    });
+
+    const ideaText = document.getElementById('newIdea') as HTMLInputElement;
+    ideaText.addEventListener('keydown', function(){
+      const ideaText = document.getElementById('newIdea') as HTMLInputElement;
+      console.log('keypressed')
+      if(ideaText.value.length){
+        inputIdeaButton.disabled = false;
+      }else{
+        inputIdeaButton.disabled = true;
+      }
+    });
+
     return true;
   }
 });
+
+
+

@@ -1,0 +1,125 @@
+.flag_update{
+    width: 100%;
+}
+
+.cp_iptxt {
+	position: relative;
+	width: 80%;
+	margin: 40px 3%;
+}
+.cp_iptxt input[type='text'] {
+	font: 15px/24px sans-serif;
+	box-sizing: border-box;
+	width: 100%;
+	letter-spacing: 1px;
+	padding-left: 4em;
+}
+.cp_iptxt input[type='text']:focus {
+	outline: none;
+}
+.ef {
+	padding: 4px 0;
+	border: 0;
+	border-bottom: 1px solid #1b2538;
+	background-color: transparent;
+}
+.ef ~ .focus_line {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 0;
+	height: 2px;
+	transition: 0.4s;
+	background-color: #da3c41;
+}
+.ef ~ .focus_line {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 0;
+	height: 2px;
+	transition: 0.4s;
+	background-color: #da3c41;
+}
+.ef:focus ~ .focus_line,
+.cp_iptxt.ef ~ .focus_line {
+	left: 0;
+	width: 100%;
+	transition: 0.4s;
+}
+.ef ~ label {
+	position: absolute;
+	z-index: -1;
+	top: 4px;
+	left: 0;
+	width: 100%;
+	transition: 0.3s;
+	letter-spacing: 0.5px;
+	color: #aaaaaa;
+}
+.ef:focus ~ label, .cp_iptxt.ef ~ label {
+	font-size: 12px;
+	top: -16px;
+	transition: 0.3s;
+	color: #da3c41;
+}
+
+.flex-form {
+    display: flex;
+}
+
+.form-idea{
+    position: relative;
+    top: 20px;
+}
+
+
+/* button */
+.reset {
+    color: black;
+    text-decoration: none;
+    font-family: sans-serif;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: normal;
+    border: none;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+
+}
+
+.button-shadow {
+    text-align: center;
+    box-sizing: border-box;
+    display: block;
+    max-width: 200px;
+    width: 150%;
+    margin: 0 auto;
+    background: rgb(0,154,235);
+    color: #fff;
+    font-weight: bold;
+    padding: 13px 10px 10px;
+    border-radius: 10px;
+    border-bottom: 5px solid rgba(0,0,0,0.3);
+}
+.button-shadow:hover {
+    animation: 1s flash;
+}
+.button-shadow:focus {
+    border-bottom-width: 0;
+    margin-top: 5px;
+    background: gray;
+}
+
+input[type="button"]:disabled {
+    background: #ccc;
+}
+
+@keyframes flash {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+}

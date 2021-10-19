@@ -12,16 +12,17 @@ if(localStorage.getItem('uuid')){
 };
 
 function overWriteTweet(){
-//Twitterを開いているタブをURLで指定　tabsにタブIDを代入
-chrome.tabs.query( {url:'https://twitter.com/*'}, function(tabs){
-  //上記タブID(tabs)で実行されるcontents.tsxのaddListnerに第２引数を送信
-  chrome.tabs.sendMessage(tabs[0].id, {
-    command: "brestResume",
-    theme: localStorage.getItem("userTheme"),
-    latestIdea: localStorage.getItem("latestIdea"),
-    keyword: 'おにぎり'
+  //Twitterを開いているタブをURLで指定　tabsにタブIDを代入
+  chrome.tabs.query( {url:'https://twitter.com/*'}, function(tabs){
+    //上記タブID(tabs)で実行されるcontents.tsxのaddListnerに第２引数を送信
+    chrome.tabs.sendMessage(tabs[0].id, {
+      command: "brestResume",
+      theme: localStorage.getItem("userTheme"),
+      latestIdea: localStorage.getItem("latestIdea"),
+      keyword: 'おにぎり'
+    });
   });
-});
+
   // let ideaLogsJSON = {}
   // // ここで，「LatestIdeaがnullでなければ」，APIを叩いてDBからアイデアの履歴を取得する
   // if(localStorage.getItem("Latest Idea")){
