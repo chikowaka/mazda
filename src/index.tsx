@@ -12,9 +12,6 @@ const App = () => {
             <input type="text" id="userTheme"/>
             <input type="button" value="テーマ確定" id="updateTheme" />
             <input type="button" value="上書きのデバッグ実行" id="debug" />
-            <p>思いついたアイデアを一つ入力してください</p>
-            <input type="text" id="newIdea"/>
-            <input type="button" value="アイデア入力" id="inputIdea" />
         </div>
     )
 };
