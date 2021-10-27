@@ -17,7 +17,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     new_tweet_text.className = 'css-901oao css-16my406 r-1tl8opc r-bcqeeo r-qvutc0 flag_update';
     
     //上書き済みかどうかを判定　上書きしていたら実行しない
-    const updated_tweet_flag = target_tweet.item(0).lastElementChild.classList.contains('flag_update');
+    const updated_tweet_flag = target_tweet.item(0).children.item(0).classList.contains('flag_update');
     console.log('上書き済み判定：', updated_tweet_flag);
 
     //画像含まれるTweetかどうかを判定
