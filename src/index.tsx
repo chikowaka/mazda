@@ -1,50 +1,47 @@
 // ポップアップのhtmlへのjavascriptはここ？多分
 
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import $ from 'jquery';
-
 import './popup.css';
-
 
 const App = () => {
     return(
         <div>
-            <div className='title'> <h2><strong>いつでもブレストのテーマ入力</strong></h2></div>
+            <div className='title'> <h2><strong>いつでもブレスト</strong></h2></div>
             <p>あなたのブレストテーマを入力してください</p>
-            <input id="input" type="text" value="テーマ"></input>
-            <button id="submit">テーマを決定</button>
+            <input type="text" id="userTheme"/>
+            <input type="button" value="テーマ確定" id="updateTheme" />
+            <input type="button" value="上書きのデバッグ実行" id="debug" />
         </div>
     )
 };
 
+ReactDOM.render(<App />, document.getElementById('root'));
 
-// function sendToContents(){
-//   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-//       chrome.tabs.sendMessage(tabs[0].id, 
-//           JSON.stringify({ contents: "test value from popup" }),
-//           function (response) {
-//           });
-//   });    
-// }
-// document.getElementById('send').addEventListener('click', sendToContents);
 
-// window.onload = function ()
-// {
-//   //Run when opened
-// }
-//Aboutボタン（常に有効）
-$(function(){
-　$("#btn").on('click',function(){
-  //Executed when the button is pressed
-  const forms = document.getElementsByClassName('usersTheme');
-  const content = forms.item(0).nodeValue;
-  console.log('Pushed!, forms:', content);//For debugging
-  var send_data = {type: 'users_theme', data:['key','val']};
-  chrome.runtime.sendMessage(send_data)
-  // localStorage.setItem("testKey", "testVal");
-  // console.log(localStorage.getItem("testKey"));
-　});
+//テーマを更新した時の機能
+const updateThemaButton = document.getElementById('updateTheme');
+updateThemaButton.addEventListener('click', function(){
+    const themeText = document.getElementById('userTheme') as HTMLInputElement;
+    console.log('Pushed!　入力テーマ:', themeText.value);
+    const sendData = {type: 'userTheme', data:['userTheme',themeText.value]};
+    chrome.runtime.sendMessage(sendData);
 });
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// デバッグ用の上書き機能
+const debugButton = document.getElementById('debug');
+debugButton.addEventListener('click', function(){
+    const themeText = document.getElementById('userTheme') as HTMLInputElement;
+    const sendData = {type: 'debug', data:['userTheme',themeText.value]};
+    chrome.runtime.sendMessage(sendData);
+    console.log('debug done')
+});
+
+// アイデア入力時の機能
+const inputIdeaButton = document.getElementById('inputIdea');
+inputIdeaButton.addEventListener('click', function(){
+    const ideaText = document.getElementById('newIdea') as HTMLInputElement;
+    console.log('Pushed!　新アイデア:', ideaText.value);
+    const sendData = {type: 'newIdea', idea:ideaText.value};
+    chrome.runtime.sendMessage(sendData);
+});
