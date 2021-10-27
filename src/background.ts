@@ -62,14 +62,15 @@ function overWriteTweet(){
   // }
 }
 
-chrome.alarms.create('NAME_OF_ALARM', { delayInMinutes: 2, periodInMinutes: 2 });
-chrome.alarms.onAlarm.addListener(alarm => {
-  if (alarm.name == 'NAME_OF_ALARM') {
-    console.log('on_alarm');
-    overWriteTweet()
-  return true;
-  }
-});
+//一定時間で書き換え指示
+// chrome.alarms.create('NAME_OF_ALARM', { delayInMinutes: 2, periodInMinutes: 2 });
+// chrome.alarms.onAlarm.addListener(alarm => {
+//   if (alarm.name == 'NAME_OF_ALARM') {
+//     console.log('on_alarm');
+//     overWriteTweet()
+//   return true;
+//   }
+// });
 
 chrome.runtime.onMessage.addListener((request, sender) => {
 	if(request.type == 'userTheme'){//ここで判別
@@ -95,7 +96,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
     // add content type header to object
     myHeaders.append("Content-Type", "application/json");
     // using built in JSON utility package turn object to string and store in a variable
-    var raw = JSON.stringify({"OperationType": "PUT", "Keys": {"UserID":uuid,"Theme":localStorage.getItem("userTheme"),"Idea":request.idea}});
+    var raw = JSON.stringify({"OperationType": "PUT", "Keys": {"UserID":uuid,"Theme":localStorage.getItem("userTheme"),"Idea":request.idea,"MediaTypeSent":request.MediaTypeSent,"MediaTypeImg":request.MediaTypeImg,"MediaTypeMov":request.MediaTypeMov,"GroupType":0}});
     // create a JSON object with parameters for API call and store in a variable
     const redirectType:RequestRedirect = "follow";
     var requestOptions = {

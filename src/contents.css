@@ -1,11 +1,17 @@
 .flag_update{
     width: 100%;
+	background-color: #FAF0E6;
+	border-radius: 15px;
+}
+
+.update_contents{
+	padding: 10px !important;
 }
 
 .cp_iptxt {
 	position: relative;
 	width: 80%;
-	margin: 40px 3%;
+	margin: 15px 3% 5px 3%;
 }
 .cp_iptxt input[type='text'] {
 	font: 15px/24px sans-serif;
@@ -70,7 +76,7 @@
 
 .form-idea{
     position: relative;
-    top: 20px;
+    /* top: 20px; */
 }
 
 
@@ -97,7 +103,7 @@
     box-sizing: border-box;
     display: block;
     max-width: 200px;
-    width: 150%;
+    width: 120%;
     margin: 0 auto;
     background: rgb(0,154,235);
     color: #fff;
