@@ -1,47 +1,72 @@
-// ポップアップのhtmlへのjavascriptはここ？多分
+// ポップアップのhtmlへのjavascriptはここ Chrome拡張読み込み時に最初に読まれるJS
+import ReactDOM from 'react-dom'
+import React from 'react'
+import {Main} from './Main'
+// import { v4 as uuidv4 } from 'uuid'
 
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
-import './popup.css';
+import './popup.css'
 
-const App = () => {
-    return(
-        <div>
-            <div className='title'> <h2><strong>いつでもブレスト</strong></h2></div>
-            <p>あなたのブレストテーマを入力してください</p>
-            <input type="text" id="userTheme"/>
-            <input type="button" value="テーマ確定" id="updateTheme" />
-            <input type="button" value="上書きのデバッグ実行" id="debug" />
-        </div>
-    )
-};
+console.log('3');
 
-ReactDOM.render(<App />, document.getElementById('root'));
+///////////////////////////////
+//UUIDがなければ生成
 
+// if(localStorage.getItem('uuid')){
+//     var uuid = localStorage.getItem('uuid');
+//     console.log(uuid);
+//   }else{
+//     var uuid = uuidv4();
+//     localStorage.setItem('uuid',uuid);
+//     // console.log(uuid);
+// };
+//////////////////////////////
 
-//テーマを更新した時の機能
-const updateThemaButton = document.getElementById('updateTheme');
+// 挿入した回数
+// if(localStorage.getItem('insert_num')){
+//     var insert_num = Number(localStorage.getItem('insert_num'));
+//     console.log(insert_num);
+//   }else{
+//     var insert_num = 0;
+//     localStorage.setItem('insert_num',String(insert_num));
+//     // console.log(uuid);
+// };
+
+const App = () => <Main />
+ReactDOM.render(
+    <App />, 
+    document.getElementById('root')
+);
+
+//////////////////////////////
+//////////////////////////////
+
+//UserIDを更新した時の機能
+const updateThemaButton = document.getElementById('updateUserID');
 updateThemaButton.addEventListener('click', function(){
-    const themeText = document.getElementById('userTheme') as HTMLInputElement;
+    const themeText = document.getElementById('userID') as HTMLInputElement;
     console.log('Pushed!　入力テーマ:', themeText.value);
-    const sendData = {type: 'userTheme', data:['userTheme',themeText.value]};
+    const sendData = {type: 'userID', data:['userID',themeText.value]};
     chrome.runtime.sendMessage(sendData);
 });
 
 // デバッグ用の上書き機能
 const debugButton = document.getElementById('debug');
 debugButton.addEventListener('click', function(){
-    const themeText = document.getElementById('userTheme') as HTMLInputElement;
-    const sendData = {type: 'debug', data:['userTheme',themeText.value]};
+    const themeText = document.getElementById('userID') as HTMLInputElement;
+    const sendData = {type: 'debug', data:['userID',themeText.value]};
     chrome.runtime.sendMessage(sendData);
     console.log('debug done')
 });
 
-// アイデア入力時の機能
-const inputIdeaButton = document.getElementById('inputIdea');
-inputIdeaButton.addEventListener('click', function(){
-    const ideaText = document.getElementById('newIdea') as HTMLInputElement;
-    console.log('Pushed!　新アイデア:', ideaText.value);
-    const sendData = {type: 'newIdea', idea:ideaText.value};
-    chrome.runtime.sendMessage(sendData);
-});
+// // アイデア入力時に付箋を追加
+// const inputIdeaButton = document.getElementById('add-idea-button');
+// inputIdeaButton.addEventListener('click', function(){
+//     console.log('Pushed!　新アイデア:');
+//     const noteContainer = document.getElementById('sticky-note-container');
+//     const targetSpan = document.getElementById('witeboard');
+//     const ideaNote = document.createElement('div');
+//     ideaNote.className = "ideaNote"
+//     ideaNote.innerHTML = '<input type="text">'
+//     noteContainer.insertBefore(ideaNote, targetSpan);
+    
+// });

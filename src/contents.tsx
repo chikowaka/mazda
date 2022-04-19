@@ -6,23 +6,28 @@ import './contents.css';
 
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
   // const updated_tweet = document.getElementsByClassName('css-901oao css-16my406 r-1tl8opc r-bcqeeo r-qvutc0 flag_update');//Tweetのアカウント名〜いいねまで削除
-
-  // タイムラインの読み込み
   if (msg['command'] == 'brestResume'){
     // console.log('ideaLogs:', msg['ideaLogs'][0]['Idea']);
-    let theme = msg['theme']
     //Tweet内容の上書き 
     const target_tweet = document.getElementsByClassName('css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu');//Tweetのアカウント名〜いいねまで削除
     const new_tweet_text = document.createElement('span');
     new_tweet_text.className = 'css-901oao css-16my406 r-1tl8opc r-bcqeeo r-qvutc0 flag_update';
     
-    //上書き済みかどうかを判定　上書きしていたら実行しない
-    const updated_tweet_flag = target_tweet.item(0).children.item(0).classList.contains('flag_update');
+    //上書き済みかどうかを判定　上書きしていたら実行しない　前者は上部に挿入　後者は下部に挿入時
+    // const updated_tweet_flag = target_tweet.item(0).children.item(0).classList.contains('flag_update');
+    const updated_tweet_flag = target_tweet.item(0).lastElementChild.classList.contains('flag_update');
+
     console.log('上書き済み判定：', updated_tweet_flag);
 
     //画像含まれるTweetかどうかを判定
     //タイムライントップのTweetのDOM要素を文字列に変換
-    const target_tweet_str = target_tweet.item(0).children.item(1).outerHTML;
+    var i = 0
+    if(updated_tweet_flag){
+      i = 2
+    }else{
+      i = 1
+    }
+    const target_tweet_str = target_tweet.item(0).children.item(i).outerHTML;
     //画像についているclassの塊　css-1dbjc4n r-1p0dtai r-1mlwlqe r-1d2f490 r-11wrixw r-61z16t r-1udh08x r-u8s1d r-zchlnj r-ipm5af r-417010
     //動画についているclassの塊　css-1dbjc4n r-1p0dtai r-1loqt21 r-1d2f490 r-u8s1d r-zchlnj r-ipm5af
     //文についているclassの塊　　css-901oao r-18jsvk2 r-1tl8opc r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0
@@ -32,11 +37,13 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     var img_tweet_flag = 0
     var mov_tweet_flag = 0
     var sent_tweet_flag = 0
+    
     if(target_tweet_str.match(/css-1dbjc4n r-1p0dtai r-1mlwlqe r-1d2f490 r-11wrixw r-61z16t r-1udh08x r-u8s1d r-zchlnj r-ipm5af r-417010/)){
       img_tweet_flag = 1
     }else if(target_tweet_str.match(/css-1dbjc4n r-1p0dtai r-1loqt21 r-1d2f490 r-u8s1d r-zchlnj r-ipm5af/)){
       mov_tweet_flag = 1
     }
+    // 日本語と英語で適用されているclassが違ったのでそれぞれ判定
     if(target_tweet_str.match(/css-901oao r-18jsvk2 r-1tl8opc r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0/)){
       sent_tweet_flag = 1
     }else if(target_tweet_str.match(/css-901oao r-18jsvk2 r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-bnwqim r-qvutc0/)){
@@ -46,81 +53,104 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
     console.log('画像を含むか判定：', img_tweet_flag);
     console.log('動画を含むか判定：', mov_tweet_flag);
 
-
-    if(!updated_tweet_flag){
-      //挿入するhtmlを生成
-      if(msg['latestIdea']){
-        new_tweet_text.innerHTML = '\
-        <div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu update_contents">' 
-          +'このTweetをヒントにアイデアを考えて入力してください！<br>'
-          +'テーマは「' + theme +'」です。<br>' 
-          + '<div class="flex-form">'
-            + '<div class="cp_iptxt flex-item">'
-              + '<input class="ef" type="text" id="newIdea" autocomplete="off">'
-              + '<label>アイデア</label>'
-              + '<span class="focus_line"></span>'
-            + '</div>'
-            + '<div class="flex-item form-idea">'
-              + '<input class="reset button-shadow" type="button" id="inputIdea" value="入力" disabled>'
-            + '</div>'
-          +'</div>'
-        +'</div>';
-      }else{
-        new_tweet_text.innerHTML = '\
-        <div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu">\
-          <b>ブレストタイム！</b>'
-          +'テーマは「' + theme +'」です。<br>' 
-          + '<div class="flex-form">'
-            + '<div class="cp_iptxt flex-item">'
-              + '<input class="ef" type="text" id="newIdea" autocomplete="off">'
-              + '<label>アイデア</label>'
-              + '<span class="focus_line"></span>'
-            + '</div>'
-            + '<div class="flex-item form-idea">'
-              + '<input class="reset button-shadow" type="button" id="inputIdea" value="入力" disabled>'
-            + '</div>'
-          +'</div>'
-        +'</div>';
-      }
+    // 対象となるTweetのIDを取得
+    const twitter_lang = document.getElementsByTagName('html').item(0).getAttribute('lang')
+    let tweetID = '1481312055743315971'
+    if(twitter_lang == 'ja'){
+      tweetID = target_tweet.item(0).getElementsByClassName('css-4rbku5 css-18t94o4 css-901oao r-1loqt21 r-1q142lx r-1tl8opc r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0').item(0).getAttribute('href').split('/').slice(-1)[0]
+      // tweetID = target_tweet.item(0).getElementsByClassName('css-4rbku5 css-18t94o4 css-901oao r-14j79pv r-1loqt21 r-1q142lx r-1tl8opc r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0').item(0).getAttribute('href').split('/').slice(-1)[0]
+    }else if(twitter_lang == 'en'){
+      tweetID = target_tweet.item(0).getElementsByClassName('css-4rbku5 css-18t94o4 css-901oao r-1loqt21 r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0').item(0).getAttribute('href').split('/').slice(-1)[0]
+      // tweetID = target_tweet.item(0).getElementsByClassName('css-4rbku5 css-18t94o4 css-901oao r-14j79pv r-1loqt21 r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0').item(0).getAttribute('href').split('/').slice(-1)[0]
     }
+    // 右のパターンも有る。r-14j79pvが抜けてるっぽい。でも時間経orマウスでホバーするとつく。なんだコレ。「 css-4rbku5 css-18t94o4 css-901oao r-1loqt21 r-1q142lx r-1tl8opc r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0」
+    
+    //挿入するhtmlを生成
+    new_tweet_text.innerHTML = `
+      <div class="css-1dbjc4n r-1iusvr4 r-16y2uox r-1777fci r-kzbkwu update_contents">
+        ブレストタイム！<br>
+        テーマは「斬新で仲が深まる新入生歓迎オリエンテーション」です。<br>
+        <input class="reset button-shadow" type="button" id="${tweetID}" value="アイデアを入力">
+      </div>`
+    
     
     console.log('上書き内容', new_tweet_text, typeof new_tweet_text)
     console.log('上書き対象Tweet', target_tweet.item(0))
-    target_tweet.item(0).insertBefore(new_tweet_text,target_tweet.item(0).children.item(0));
 
 
-    //Tweetトプ画の上書き
-    // const target_profile_img = document.getElementsByClassName('r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-ipm5af r-13qz1uu');
-    // const new_profile_img = document.createElement('div');
-    // new_profile_img.innerHTML = '<div aria-label="" class="css-1dbjc4n r-sdzlij r-1p0dtai r-1mlwlqe r-1d2f490 r-1udh08x r-u8s1d r-zchlnj r-ipm5af r-417010 flag_update"><div class="css-1dbjc4n r-1niwhzg r-vvn4in r-u6sd8q r-4gszlv r-1p0dtai r-1pi2tsx r-1d2f490 r-u8s1d r-zchlnj r-ipm5af r-13qz1uu r-1wyyakw" style="background-image: url(&quot;https://pbs.twimg.com/profile_images/1166895613427900417/7p3QS01J_normal.png&quot;);"></div><img alt="" draggable="true" src="https://pbs.twimg.com/profile_images/1166895613427900417/7p3QS01J_normal.png" class="css-9pa8cd"></div>';
-    // console.log('上書きトプ画', target_profile_img.item(4));
-    // target_profile_img.item(4).parentNode.replaceChild(new_profile_img, target_profile_img.item(4));
-    
-    //ボタンが押された時に入力フォームの内容をバックグラウンドに送信
-    const inputIdeaButton = document.getElementById('inputIdea') as HTMLInputElement;
-    inputIdeaButton.addEventListener('click', function(){
-      const ideaText = document.getElementById('newIdea') as HTMLInputElement;
-      console.log('Pushed!　新アイデア:', ideaText.value);
-      const sendData = {type: 'newIdea', idea:ideaText.value, MediaTypeSent:sent_tweet_flag, MediaTypeImg:img_tweet_flag, MediaTypeMov:mov_tweet_flag};
-      chrome.runtime.sendMessage(sendData);
-      inputIdeaButton.value = '完了'
-      setTimeout(function(){
-        inputIdeaButton.value = '入力';
-      },3000);
-    });
+    // 更新済みフラグのあるTweetが最上部のときは挿入しない。
+    if(!updated_tweet_flag){
+      // 前者はTweet上部　後者はTweet下部に挿入する
+      // target_tweet.item(0).insertBefore(new_tweet_text,target_tweet.item(0).children.item(0));
+      target_tweet.item(0).appendChild(new_tweet_text);
+      console.log('Link Inserted')
 
-    //入力フォームをバリデーションしてボタンの押せる押せないを制御
-    const ideaText = document.getElementById('newIdea') as HTMLInputElement;
-    ideaText.addEventListener('keydown', function(){
-      const ideaText = document.getElementById('newIdea') as HTMLInputElement;
-      console.log('keypressed')
-      if(ideaText.value.length){
-        inputIdeaButton.disabled = false;
-      }else{
-        inputIdeaButton.disabled = true;
-      }
-    });
+      // 挿入のログを送信　APIを使用
+      // make API call with parameters and use promises to get response
+      // instantiate a headers object
+      var myHeaders = new Headers();
+      // add content type header to object
+      myHeaders.append("Content-Type", "application/json");
+      // using built in JSON utility package turn object to string and store in a variable
+      var raw = JSON.stringify({
+        'UserID':msg['UserID'],
+        'ActionType': 'insert',
+        'TweetID': tweetID
+      });
+      console.log('raw',raw);
+      // create a JSON object with parameters for API call and store in a variable
+      const redirectType:RequestRedirect = "follow";
+      var requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+          redirect: redirectType
+      };
+      fetch("https://qvshu3x302.execute-api.ap-northeast-1.amazonaws.com/wb_dev", requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+
+      
+      //ボタンが押された時にそのツイートのIDを取得してwebアプリへ遷移するイベントリスナーのインスタンス？を生成。実行された数だけ個別のリスナーが作られる。
+      const inputIdeaButton = document.getElementById(tweetID) as HTMLInputElement;
+      inputIdeaButton.addEventListener('click', function(){
+        console.log('tweetID:', tweetID)
+        window.open('https://master.d1321rgyhhbzcx.amplifyapp.com/?tweetID=' + tweetID + '&sent=' + sent_tweet_flag + '&img=' + img_tweet_flag + '&mov=' + mov_tweet_flag)
+        // クリックログを送信　APIを使用
+        // make API call with parameters and use promises to get response
+        // instantiate a headers object
+        var myHeaders = new Headers();
+        // add content type header to object
+        myHeaders.append("Content-Type", "application/json");
+        // using built in JSON utility package turn object to string and store in a variable
+        var raw = JSON.stringify({
+          'UserID':msg['UserID'],
+          'ActionType': 'click',
+          'TweetID': tweetID
+        });
+        // create a JSON object with parameters for API call and store in a variable
+        const redirectType:RequestRedirect = "follow";
+        var requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw,
+            redirect: redirectType
+        };
+        fetch("https://qvshu3x302.execute-api.ap-northeast-1.amazonaws.com/wb_dev", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+      });
+    }
 
     return true;
+  }else if(msg['command'] == 'notUserID'){
+    window.alert('右上の[I]アイコンからユーザIDを入力してください');
   }
 });
+
+// 英語
+// css-4rbku5 css-18t94o4 css-901oao r-14j79pv r-1loqt21 r-1q142lx r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0
+// 日本語
+// css-4rbku5 css-18t94o4 css-901oao r-14j79pv r-1loqt21 r-1q142lx r-1tl8opc r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-3s2u2q r-qvutc0

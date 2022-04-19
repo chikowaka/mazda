@@ -1,9 +1,11 @@
 body {
     min-width: 300px;
-    min-height: 80px;
-
+    /* min-height: 300px; */
   }
-input[type="button"]:hover{
+#main {
+    padding: 8px;
+}
+/* input[type="button"]:hover{
     background-color:#79acdf;
     -webkit-box-shadow:inset 0px 0px 3px #fff;
     -moz-box-shadow:inset 0px 0px 3px #fff;
@@ -18,8 +20,20 @@ input[type="button"]:active{
     -webkit-box-shadow:inset 0px 0px 8px #334c66;
     -moz-box-shadow:inset 0px 0px 2px #3a6da0;
     box-shadow:inset 0px 0px 2px #3a6da0;
-}
+} */
 
 #title{
     font-size: 200%
+}
+
+.ideaNote {
+    background-color: aliceblue;
+    text-align: center;
+    width: 30%;
+    height: 5rem;
+
+}
+.ideaNote > input[type="text"] {
+    width: 95%;
+    height: 5rem;
 }
